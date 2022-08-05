@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using NoBleyzer.Models;
 
 var builder = WebApplication.CreateBuilder(args);

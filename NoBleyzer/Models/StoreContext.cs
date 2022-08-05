@@ -10,7 +10,7 @@ namespace NoBleyzer.Models
         public StoreContext(DbContextOptions<StoreContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
     }
 }
