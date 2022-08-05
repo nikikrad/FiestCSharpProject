@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoBleyzer.Models;
+using NoBleyzer.Request.GameController;
 
 namespace NoBleyzer.Controllers
 {
@@ -16,21 +17,29 @@ namespace NoBleyzer.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await db.Games.ToListAsync());
+            return Ok(await db.Games.ToListAsync());
         }
         [HttpPost]
-        public async Task<ActionResult> Create(Game game)
+        public async Task<ActionResult> Create(PostGame game)
         {
-            db.Games.Add(game);
+            var geyGame = new Game();
+            geyGame.Title = game.Title;
+            geyGame.Price = game.Price;
+            db.Games.Add(geyGame);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return Ok();
         }
         [HttpDelete]
-        public async Task<ActionResult> Remove(Game game)
+        public async Task<ActionResult> Remove(int id)
         {
-            db.Games.Remove(game);
-            await db.AddRangeAsync(db.Games);
-            return View(game);
+            var res = await db.Games.FirstOrDefaultAsync(x => x.Id == id);
+            if(res != null)
+            {
+                db.Games.Remove(res);
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
     }
