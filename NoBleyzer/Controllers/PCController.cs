@@ -2,47 +2,46 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoBleyzer.Models;
-using NoBleyzer.Request.GameController;
+using NoBleyzer.Request.PCController;
 
 namespace NoBleyzer.Controllers
 {
     [Route("[controller]/[action]")]
-    public class GameController: Controller
+    public class PCController: Controller
     {
         private StoreContext db;
         public readonly IMapper _mapper;
-        public GameController(StoreContext context, IMapper mapper)
+
+        public PCController(StoreContext context, IMapper mapper)
         {
             db = context;
             _mapper = mapper;
         }
-
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Get()
         {
-            return Ok(await db.Games.ToListAsync());
+            return Ok(await db.PCs.ToListAsync());
         }
-        [HttpPost]
-        public async Task<ActionResult> Create(PostGame game)
-        {
-            var _mappedGame = _mapper.Map<Game>(game);
-            db.Games.Add(_mappedGame);
-            await db.SaveChangesAsync();
 
+        [HttpPost]
+        public async Task<ActionResult> Create(PostPC postPC)
+        {
+            var _mappedPC = _mapper.Map<PC>(postPC);
+            db.PCs.Add(_mappedPC);
+            await db.SaveChangesAsync();
             return Ok();
         }
         [HttpDelete]
-        public async Task<ActionResult> Remove(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var res = await db.Games.FirstOrDefaultAsync(x => x.Id == id);
-            if(res != null)
+            var res = await db.PCs.FirstOrDefaultAsync(x => x.Id == id);
+            if (res != null)
             {
-                db.Games.Remove(res);
+                db.PCs.Remove(res);
                 db.SaveChanges();
                 return Ok();
             }
             return BadRequest();
         }
-
     }
 }

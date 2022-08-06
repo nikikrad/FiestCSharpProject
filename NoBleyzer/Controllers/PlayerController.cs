@@ -2,40 +2,42 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoBleyzer.Models;
-using NoBleyzer.Request.GameController;
+using NoBleyzer.Request.PlayerController;
 
 namespace NoBleyzer.Controllers
 {
     [Route("[controller]/[action]")]
-    public class GameController: Controller
+    public class PlayerController:Controller
     {
         private StoreContext db;
         public readonly IMapper _mapper;
-        public GameController(StoreContext context, IMapper mapper)
+
+        public PlayerController(StoreContext context, IMapper mapper)
         {
             db = context;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Get()
         {
-            return Ok(await db.Games.ToListAsync());
+            return Ok(await db.Players.ToListAsync());
         }
+         
         [HttpPost]
-        public async Task<ActionResult> Create(PostGame game)
+        public async Task<ActionResult> Create(PostPlayer postPlayer)
         {
-            var _mappedGame = _mapper.Map<Game>(game);
-            db.Games.Add(_mappedGame);
+            var _mappedPlayer = _mapper.Map<Player>(postPlayer);
+            db.Players.Add(_mappedPlayer);
             await db.SaveChangesAsync();
-
             return Ok();
         }
+
         [HttpDelete]
-        public async Task<ActionResult> Remove(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var res = await db.Games.FirstOrDefaultAsync(x => x.Id == id);
-            if(res != null)
+            if (res != null)
             {
                 db.Games.Remove(res);
                 db.SaveChanges();
@@ -43,6 +45,5 @@ namespace NoBleyzer.Controllers
             }
             return BadRequest();
         }
-
     }
 }

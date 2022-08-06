@@ -12,7 +12,7 @@ using NoBleyzer.Models;
 namespace NoBleyzer.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20220805135735_init")]
+    [Migration("20220806180217_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,32 @@ namespace NoBleyzer.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("NoBleyzer.Models.PC", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Processor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VideoCard")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("PCs");
+                });
+
             modelBuilder.Entity("NoBleyzer.Models.Player", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +115,17 @@ namespace NoBleyzer.Migrations
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("NoBleyzer.Models.PC", b =>
+                {
+                    b.HasOne("NoBleyzer.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
                 });
 #pragma warning restore 612, 618
         }
