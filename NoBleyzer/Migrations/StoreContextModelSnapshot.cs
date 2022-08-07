@@ -27,12 +27,12 @@ namespace NoBleyzer.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PlayerId")
+                    b.Property<int>("PlayersId")
                         .HasColumnType("int");
 
-                    b.HasKey("GameId", "PlayerId");
+                    b.HasKey("GameId", "PlayersId");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayersId");
 
                     b.ToTable("GamePlayer");
                 });
@@ -57,6 +57,23 @@ namespace NoBleyzer.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("NoBleyzer.Models.OS", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("NameOS")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OSs");
+                });
+
             modelBuilder.Entity("NoBleyzer.Models.PC", b =>
                 {
                     b.Property<int>("Id")
@@ -64,6 +81,9 @@ namespace NoBleyzer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("OSId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
@@ -77,6 +97,8 @@ namespace NoBleyzer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OSId");
 
                     b.HasIndex("PlayerId");
 
@@ -110,13 +132,17 @@ namespace NoBleyzer.Migrations
 
                     b.HasOne("NoBleyzer.Models.Player", null)
                         .WithMany()
-                        .HasForeignKey("PlayerId")
+                        .HasForeignKey("PlayersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("NoBleyzer.Models.PC", b =>
                 {
+                    b.HasOne("NoBleyzer.Models.OS", null)
+                        .WithMany("PC")
+                        .HasForeignKey("OSId");
+
                     b.HasOne("NoBleyzer.Models.Player", "Player")
                         .WithMany()
                         .HasForeignKey("PlayerId")
@@ -124,6 +150,11 @@ namespace NoBleyzer.Migrations
                         .IsRequired();
 
                     b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("NoBleyzer.Models.OS", b =>
+                {
+                    b.Navigation("PC");
                 });
 #pragma warning restore 612, 618
         }

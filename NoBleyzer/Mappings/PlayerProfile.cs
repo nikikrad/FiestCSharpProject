@@ -4,9 +4,9 @@ using NoBleyzer.Request.PlayerController;
 
 namespace NoBleyzer.Mappings
 {
-    public class PlayerMapper: Profile
+    public class PlayerProfile: Profile
     {
-        public PlayerMapper()
+        public PlayerProfile()
         {
             CreateMap<PostPlayer, Player>()
                 .ForMember(

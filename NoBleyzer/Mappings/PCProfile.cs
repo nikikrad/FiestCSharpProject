@@ -4,9 +4,9 @@ using NoBleyzer.Request.PCController;
 
 namespace NoBleyzer.Mappings
 {
-    public class PCMapper: Profile
+    public class PCProfile: Profile
     {
-        public PCMapper()
+        public PCProfile()
         {
             CreateMap<PostPC, PC>()
                 .ForMember(

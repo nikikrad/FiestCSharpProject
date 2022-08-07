@@ -23,6 +23,19 @@ namespace NoBleyzer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OSs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NameOS = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OSs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
@@ -40,11 +53,11 @@ namespace NoBleyzer.Migrations
                 columns: table => new
                 {
                     GameId = table.Column<int>(type: "int", nullable: false),
-                    PlayerId = table.Column<int>(type: "int", nullable: false)
+                    PlayersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GamePlayer", x => new { x.GameId, x.PlayerId });
+                    table.PrimaryKey("PK_GamePlayer", x => new { x.GameId, x.PlayersId });
                     table.ForeignKey(
                         name: "FK_GamePlayer_Games_GameId",
                         column: x => x.GameId,
@@ -52,8 +65,8 @@ namespace NoBleyzer.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GamePlayer_Players_PlayerId",
-                        column: x => x.PlayerId,
+                        name: "FK_GamePlayer_Players_PlayersId",
+                        column: x => x.PlayersId,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -67,11 +80,17 @@ namespace NoBleyzer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Processor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VideoCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PlayerId = table.Column<int>(type: "int", nullable: false)
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    OSId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PCs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PCs_OSs_OSId",
+                        column: x => x.OSId,
+                        principalTable: "OSs",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PCs_Players_PlayerId",
                         column: x => x.PlayerId,
@@ -81,9 +100,14 @@ namespace NoBleyzer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GamePlayer_PlayerId",
+                name: "IX_GamePlayer_PlayersId",
                 table: "GamePlayer",
-                column: "PlayerId");
+                column: "PlayersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PCs_OSId",
+                table: "PCs",
+                column: "OSId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PCs_PlayerId",
@@ -101,6 +125,9 @@ namespace NoBleyzer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Games");
+
+            migrationBuilder.DropTable(
+                name: "OSs");
 
             migrationBuilder.DropTable(
                 name: "Players");
